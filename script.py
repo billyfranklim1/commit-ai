@@ -14,7 +14,7 @@ def generate_commit_messages(diff):
         messages=[
             {
                 "role": "user",
-                "content": f"suggest 3 commit messages based on the following diff, if diff is empty repository e first commit :\n\n{diff}\n\ncommit messages should:\n  - follow conventional commits,\n  - message format should be: <type>[scope]: <description>,\n\n\"examples:\",\n\" - 🐛 fix(authentication): add password regex pattern\",\n\" -✨ feat(storage): add new test cases\",\n",
+                "content": f"suggest 3 commit messages based on the following diff, if diff is empty repository e first commit :\n\n{diff}\n\ncommit messages should:\n  - follow conventional commits,\n  - message format should be: <type>[scope]: <description>,\n\n\"examples:\",\n\" - 🐛 fix(authentication): add password regex pattern\",\n\" -✨ feat(storage): add new test cases\",\n seja preciso quanto aos emojis",
             }
         ],
         model="gpt-3.5-turbo",
@@ -32,11 +32,21 @@ def main():
     for message in commit_messages:
         print(message)
 
+    # option para gerar novas sugestões
+    print("4: Generate new commit messages")
+    print("5: Exit")
+
     selected_option = input("Choose one of the options above: ")
     selected_option = int(selected_option)
-    if selected_option < 1 or selected_option > 3:
+    if selected_option < 1 or selected_option > 5:
         print("Invalid option")
         sys.exit(1)
+
+    if selected_option == 4:
+        #clear the terminal
+        os.system('clear')
+        main()
+        return
 
     commit_message = commit_messages[selected_option - 1]
     os.system(f'git commit -m "{commit_message}"')
