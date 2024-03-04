@@ -32,7 +32,6 @@ def main():
     for message in commit_messages:
         print(message)
 
-    # option para gerar novas sugestões
     print("4: Generate new commit messages")
     print("5: Exit")
 
@@ -43,7 +42,6 @@ def main():
         sys.exit(1)
 
     if selected_option == 4:
-        #clear the terminal
         os.system('clear')
         main()
         return
