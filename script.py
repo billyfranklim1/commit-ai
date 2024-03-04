@@ -1,6 +1,8 @@
 import openai
 import sys
 import os
+from prompt_toolkit import prompt
+from prompt_toolkit.shortcuts import checkboxlist_dialog
 
 openai.api_key = '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'
 
@@ -25,31 +27,31 @@ def generate_commit_messages(diff):
 def main():
     diff = get_git_diff()
 
-    commit_messages = generate_commit_messages(diff)
-    commit_messages = commit_messages.split("\n")
-    print("Suggested commit messages:")
+    commit_messages = generate_commit_messages(diff).split("\n")
+    commit_messages.append("Generate new commit messages")
+    commit_messages.append("Exit")
 
-    for message in commit_messages:
-        print(message)
+    selected = checkboxlist_dialog(
+        title="Commit Messages",
+        text="Choose one of the options below:",
+        values=[(i, msg) for i, msg in enumerate(commit_messages, start=1)]
+    ).run()
 
-    print("4: Generate new commit messages")
-    print("5: Exit")
-
-    selected_option = input("Choose one of the options above: ")
-    selected_option = int(selected_option)
-    if selected_option < 1 or selected_option > 5:
-        print("Invalid option")
-        sys.exit(1)
-
-    if selected_option == 4:
-        os.system('clear')
-        main()
+    if not selected:
+        print("No option selected")
         return
 
-    commit_message = commit_messages[selected_option - 1]
-    os.system(f'git commit -m "{commit_message}"')
-    print(f'Committed with message: "{commit_message}"')
-
+    for option in selected:
+        if option == len(commit_messages) - 1:  # Generate new commit messages
+            os.system('clear')  # or 'cls' on Windows
+            main()
+            return
+        elif option == len(commit_messages):  # Exit
+            sys.exit(0)
+        else:
+            commit_message = commit_messages[option - 1]
+            os.system(f'git commit -m "{commit_message}"')
+            print(f'Committed with message: "{commit_message}"')
 
 if __name__ == "__main__":
     main()
