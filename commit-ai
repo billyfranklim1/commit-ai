@@ -24,7 +24,7 @@ def generate_commit_messages(diff):
         messages=[
             {
                 "role": "user",
-                "content": f"suggest 3 commit messages based on the following diff, if diff is empty repository e first commit :\n\n{diff}\n\ncommit messages should:\n  - follow conventional commits,\n  - message format should be: <type>[scope]: <description>,\n  - incorporate the following emojis for types:\n    ✨ feat - Introduzir novos recursos.\n    🐛 fix - Corrigir problemas ou bugs.\n    📚 docs - Atualizar documentação.\n    🧪 test - Alterar ou adicionar testes.\n    🏗️ build - Modificar arquivos de build ou dependências.\n    ⚡ perf - Melhorar performance.\n    💅 style - Ajustar formatação e estilo do código.\n    ♻️ refactor - Refatorar código sem alterar funcionalidade.\n    🚀 chore - Atualizar tarefas rotineiras e configs.\n    🔄 ci - Ajustes em integração contínua.\n    🗂️ raw - Modificar arquivos de configurações ou dados.\n\n\"examples:\",\n\" - 🐛 fix(authentication): add password regex pattern\",\n\" -✨ feat(storage): add new test cases\",\n seja preciso quanto aos emojis, sem bulet points",
+                "content": f"suggest 3 commit messages based on the following diff, if diff is empty repository e first commit :\n\n{diff}\n\ncommit messages should:\n  - follow conventional commits,\n  - message format should be: <type>[scope]: <description>,\n  - incorporate the following emojis for types:\n    ✨ feat - Introduzir novos recursos.\n    🐛 fix - Corrigir problemas ou bugs.\n    📚 docs - Atualizar documentação.\n    🧪 test - Alterar ou adicionar testes.\n    🏗️ build - Modificar arquivos de build ou dependências.\n    ⚡ perf - Melhorar performance.\n    💅 style - Ajustar formatação e estilo do código.\n    ♻️ refactor - Refatorar código sem alterar funcionalidade.\n    🚀 chore - Atualizar tarefas rotineiras e configs.\n    🔄 ci - Ajustes em integração contínua.\n    🗂️ raw - Modificar arquivos de configurações ou dados.\n\n\"examples:\",\n\" - 🐛 fix(authentication): add password regex pattern\",\n\" -✨ feat(storage): add new test cases\",\n seja preciso quanto aos emojis, sem bulet points, traços e etc",
             }
         ],
         model="gpt-3.5-turbo",
@@ -43,7 +43,7 @@ def main():
 
             commit_messages = generate_commit_messages(diff)
             commit_messages = commit_messages.split("\n")
-            commit_messages = [re.sub(r'^-?\s*', '', message) for message in commit_messages if message]
+            commit_messages = [re.sub(r'^[\d.]*\s*', '', message) for message in commit_messages if message]
 
             print(colored("Suggested commit messages:", "cyan"))
 
