@@ -31,8 +31,8 @@ def main():
 
             if not diff:
                 print("No changes to commit.")
-                break
-            
+                sys.exit(1)
+
             commit_messages = generate_commit_messages(diff)
             commit_messages = commit_messages.split("\n")
             commit_messages = [re.sub(r'^\d+\.\s+', '', message) for message in commit_messages if message]
