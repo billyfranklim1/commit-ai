@@ -38,36 +38,36 @@ def main():
             commit_messages = commit_messages.split("\n")
             commit_messages = [re.sub(r'^\d+\.\s+', '', message) for message in commit_messages if message]
 
-            print("Suggested commit messages:")
+            print(colored("Suggested commit messages:", "cyan"))
 
             for i, message in enumerate(commit_messages, start=1):
-                print(f"{i}: {message}")
+                print(colored(f"{i}: {message}", "cyan"))
 
             selected_option = input("Choose one of the options above (or press 'r' to refresh, 'q' to quit): \n")
             if selected_option.lower() == 'q':
-                print("Quitting...")
+                print(colored("Quitting...", "yellow"))
                 break
             elif selected_option.lower() == 'r':
-                print("Refreshing commit messages...")
+                print(colored("Refreshing commit messages...", "cyan"))
                 continue
 
             selected_option = int(selected_option)
             if selected_option < 1 or selected_option > len(commit_messages):
-                print("Invalid option")
+                print(colored("Invalid option", "red"))
                 continue
 
             commit_message = commit_messages[selected_option - 1]
             final_commit_message = prompt(f"Edit the commit message if needed: ", default=commit_message)
 
-            print(f'Final commit message: "{final_commit_message}"')
+            print(colored(f'Final commit message: "{final_commit_message}"', "yellow"))
             os.system(f'git commit -m "{final_commit_message}"')
             break
 
     except KeyboardInterrupt:
-        print("\nOperation cancelled by user.")
+        print(colored("\nOperation cancelled by user.", "red"))
         sys.exit(1)
     except ValueError:
-        print("Please enter a valid number.")
+        print(colored("Please enter a valid number.", "red"))
         main()
 
 
