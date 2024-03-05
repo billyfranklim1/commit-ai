@@ -2,6 +2,7 @@ import openai
 import sys
 import os
 from prompt_toolkit import prompt
+from termcolor import colored
 import re
 
 openai.api_key = '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'
@@ -30,7 +31,7 @@ def main():
             diff = get_git_diff()
 
             if not diff:
-                print("No changes to commit.")
+                print(colored("No changes to commit. Execute 'git add' to stage changes.", "red"))
                 sys.exit(1)
 
             commit_messages = generate_commit_messages(diff)
