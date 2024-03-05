@@ -10,6 +10,8 @@ openai_api_key = os.getenv('OPENAI_API_KEY')
 
 if openai_api_key is None:
     print(colored("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.", "red"))
+    print(colored("Edit your .bashrc or .zshrc file and add the following line:", "yellow"))
+    print(colored("export OPENAI_API=your-api-key", "yellow"))
     sys.exit(1)
 
 openai.api_key = openai_api_key
