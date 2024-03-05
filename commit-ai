@@ -6,7 +6,13 @@ from prompt_toolkit import prompt
 from termcolor import colored
 import re
 
-openai.api_key = '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'
+openai_api_key = os.getenv('OPENAI_API_KEY')
+
+if openai_api_key is None:
+    print(colored("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.", "red"))
+    sys.exit(1)
+
+openai.api_key = openai_api_key
 
 def get_git_diff():
     diff_command = 'git diff  --cached'
