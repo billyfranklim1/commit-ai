@@ -42,7 +42,7 @@ def main():
             for i, message in enumerate(commit_messages, start=1):
                 print(f"{i}: {message}")
 
-            selected_option = input("Choose one of the options above (or press 'r' to refresh, 'q' to quit): ")
+            selected_option = input("Choose one of the options above (or press 'r' to refresh, 'q' to quit): \n")
             if selected_option.lower() == 'q':
                 print("Quitting...")
                 break
