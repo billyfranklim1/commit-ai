@@ -16,7 +16,7 @@ Commit-AI é uma ferramenta CLI desenvolvida para auxiliar desenvolvedores a ger
 1. Clone o repositório do Commit-AI para sua máquina local:
 
 ```bash
-git clone https://seurepositorio/commit-ai.git
+git clone https://github.com/billyfranklim1/commit-ai.git
 ```
 
 2. Navegue até o diretório do projeto clonado:
