@@ -77,7 +77,5 @@ def main():
         print(colored("Please enter a valid number.", "red"))
         main()
 
-
-
 if __name__ == "__main__":
     main()
