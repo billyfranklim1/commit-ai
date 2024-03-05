@@ -25,33 +25,44 @@ def generate_commit_messages(diff):
     return response.choices[0].message.content
 
 def main():
-    diff = get_git_diff()
-
-    commit_messages = generate_commit_messages(diff)
-    commit_messages = commit_messages.split("\n")
-    commit_messages = [re.sub(r'^\d+\.\s+', '', message) for message in commit_messages if message]
-
-    print("Suggested commit messages:")
-
-    for i, message in enumerate(commit_messages, start=1):
-        print(f"{i}: {message}")
-
-    selected_option = input("Choose one of the options above: ")
     try:
-        selected_option = int(selected_option)
-        if selected_option < 1 or selected_option > len(commit_messages):
-            print("Invalid option")
-            sys.exit(1)
+        while True:
+            diff = get_git_diff()
+            commit_messages = generate_commit_messages(diff)
+            commit_messages = commit_messages.split("\n")
+            commit_messages = [re.sub(r'^\d+\.\s+', '', message) for message in commit_messages if message]
+
+            print("Suggested commit messages:")
+
+            for i, message in enumerate(commit_messages, start=1):
+                print(f"{i}: {message}")
+
+            selected_option = input("Choose one of the options above (or press 'r' to refresh, 'q' to quit): ")
+            if selected_option.lower() == 'q':
+                print("Quitting...")
+                break
+            elif selected_option.lower() == 'r':
+                print("Refreshing commit messages...")
+                continue
+
+            selected_option = int(selected_option)
+            if selected_option < 1 or selected_option > len(commit_messages):
+                print("Invalid option")
+                continue
+
+            commit_message = commit_messages[selected_option - 1]
+            final_commit_message = prompt(f"Edit the commit message if needed: ", default=commit_message)
+
+            print(f'Final commit message: "{final_commit_message}"')
+            os.system(f'git commit -m "{final_commit_message}"')
+            break
+
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user.")
+        sys.exit(1)
     except ValueError:
         print("Please enter a valid number.")
-        sys.exit(1)
-
-    commit_message = commit_messages[selected_option - 1]
-    
-    final_commit_message = prompt(f"Edit the commit message if needed: ", default=commit_message)
-
-    print(f'Final commit message: "{final_commit_message}"')
-    os.system(f'git commit -m "{final_commit_message}"')
+        main()
 
 
 
