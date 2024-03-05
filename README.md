@@ -47,15 +47,16 @@ chmod +x commit-ai
 6. Adicione o diretório do script ao seu PATH para permitir a execução do comando `commit-ai` de qualquer lugar. Você pode adicionar a seguinte linha ao seu `.bashrc`, `.zshrc` ou outro arquivo de configuração de shell correspondente:
 
 ```bash
-vim ~/.zshrc
+vim ~/.zshrc # Ou ~/.bashrc, ~/.bash_profile, etc.
 ```
 
 ```bash
 export PATH="$PATH:/caminho/para/commit-ai"
+export OPENAI_API_KEY='sua_chave_de_api_aqui'
 ```
 
 ```bash
-source ~/.zshrc
+source ~/.zshrc # Ou ~/.bashrc, ~/.bash_profile, etc.
 ```
 
 Lembre-se de substituir `/caminho/para/commit-ai` pelo caminho absoluto do diretório onde o script reside.
