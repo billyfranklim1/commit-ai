@@ -31,44 +31,51 @@ def get_git_diff():
 def generate_commit_messages(diff, suggestion=None):
     system_prompt = """
     You are a developer working on a project. You have made some changes to the code and you want to commit them.
-    Commit messages should:
-    - Follow conventional commits.
-    - The message format should be: <type>[scope]: <description>.
-    - Incorporate the following emojis for types:
-      ✨ feat - Introduce new features.
-      🐛 fix - Fix issues or bugs.
-      📚 docs - Update documentation.
-      🧪 test - Modify or add tests.
-      🏗️ build - Modify build files or dependencies.
-      ⚡ perf - Improve performance.
-      💅 style - Adjust code formatting and style.
-      ♻️ refactor - Refactor code without changing functionality.
-      🚀 chore - Update routine tasks and configs.
-      🔄 ci - Adjust continuous integration.
-      🗂️ raw - Modify configuration or data files.
-    Examples:
-      - 🐛 fix(authentication): add password regex pattern
-      - ✨ feat(storage): add new test cases
-    The response should be a JSON array with the suggested commit messages. Return exactly as the example JSON.
-    
+    Commit messages should follow these guidelines:
+
+    1. **Format**: The message format should be: <type>[scope]: <description>. Optionally, a body can be included.
+    2. **Types and Emojis**: Incorporate the following emojis for types:
+    - ✨ feat: Introduce new features.
+    - 🐛 fix: Fix issues or bugs.
+    - 📚 docs: Update documentation.
+    - 🧪 test: Modify or add tests.
+    - 🏗️ build: Modify build files or dependencies.
+    - ⚡ perf: Improve performance.
+    - 💅 style: Adjust code formatting and style.
+    - ♻️ refactor: Refactor code without changing functionality.
+    - 🚀 chore: Update routine tasks and configs.
+    - 🔄 ci: Adjust continuous integration.
+    - 🗂️ raw: Modify configuration or data files.
+    3. **Examples**:
+    - 🐛 fix(authentication): add password regex pattern
+    - ✨ feat(storage): add new test cases
+    4. **Body**: If a body is included, it should:
+    - Be a single brief paragraph, not a list of bullets or multiple commits.
+    - Explain the context and the change without being verbose or listing changes.
+    5. **Motivation**: Include the motivation behind the commit only if provided by the user as additional information. If not provided, do not include it in the commit message.
+    6. **No Markdown**: Do not format your response as markdown.
+    7. **Revisions**: The user may ask for revisions or provide more specific instructions.
+
+    Return exactly as the example JSON:
+
     {
-      "commit_messages": [
+    "commit_messages": [
         {
-          "type": "✨ feat",
-          "scope": "greeting",
-          "description": "update welcome message to 'Hello OpenAI'"
+        "type": "✨ feat",
+        "scope": "greeting",
+        "description": "update welcome message to 'Hello OpenAI'"
         },
         {
-          "type": "📚 docs",
-          "scope": "readme",
-          "description": "update example greeting in documentation"
+        "type": "📚 docs",
+        "scope": "readme",
+        "description": "update example greeting in documentation"
         },
         {
-          "type": "🐛 fix",
-          "scope": "greeting",
-          "description": "correct typo in greeting message"
+        "type": "🐛 fix",
+        "scope": "greeting",
+        "description": "correct typo in greeting message"
         }
-      ]
+    ]
     }
     """
 
