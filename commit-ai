@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 import openai
-import sys
 import os
-from prompt_toolkit import prompt
-from termcolor import colored
-import re
+import click
+from rich import print
+from rich.console import Console
+from rich.spinner import Spinner
 import json
+import questionary
+
+console = Console()
 
 openai_api_key = os.getenv('OPENAI_API_KEY')
 
 if openai_api_key is None:
-    print(colored("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.", "red"))
-    print(colored("Edit your .bashrc or .zshrc file and add the following line:", "yellow"))
-    print(colored("export OPENAI_API=your-api-key", "yellow"))
-    sys.exit(1)
+    console.print("[red]OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.[/red]")
+    console.print("[yellow]Edit your .bashrc or .zshrc file and add the following line:[/yellow]")
+    console.print("[yellow]export OPENAI_API_KEY=your-api-key[/yellow]")
+    raise SystemExit(1)
 
 openai.api_key = openai_api_key
 
 def get_git_diff():
     diff_command = 'git diff --cached'
     return os.popen(diff_command).read()
+
 def generate_commit_messages(diff, suggestion=None):
-    # Definir o prompt do sistema com as instruções de commit
     system_prompt = """
     You are a developer working on a project. You have made some changes to the code and you want to commit them.
     Commit messages should:
@@ -43,20 +46,18 @@ def generate_commit_messages(diff, suggestion=None):
       - 🐛 fix(authentication): add password regex pattern
       - ✨ feat(storage): add new test cases
     The response should be a JSON array with the suggested commit messages. Retorne exatamente conforme o json de exemplo.
+    
+    {"commit_messages" :[ {"type": "✨ feat", "scope": "greeting", "description": "update welcome message to \'Hello OpenAI\'"}, {"type": "📚 docs", "scope": "readme", "description": "update example greeting in documentation"}, {"type": "🐛 fix", "scope": "greeting", "description": "correct typo in greeting message"}]}
     """
 
-    # Definir o prompt do usuário com o diff e sugestões
     prompt_text = f"suggest 3 commit messages based on the following diff:\n\n{diff}\n\n"
     if suggestion:
         prompt_text += f"Suggestion for improvement: {suggestion}\n\n"
-
-    # Enviar a solicitação para a API do OpenAI
+        
     response = openai.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": "diff --git a/file.txt b/file.txt\nindex 83db48d..b5d73a3 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Hello World\n+Hello OpenAI"},
-            {"role": "assistant", "content": '{"commit_messages" :[ {"type": "✨ feat", "scope": "greeting", "description": "update welcome message to \'Hello OpenAI\'"}, {"type": "📚 docs", "scope": "readme", "description": "update example greeting in documentation"}, {"type": "🐛 fix", "scope": "greeting", "description": "correct typo in greeting message"}]}'},
             {"role": "user", "content": prompt_text},
         ],
         response_format={ "type": "json_object" },
@@ -64,51 +65,39 @@ def generate_commit_messages(diff, suggestion=None):
 
     return json.loads(response.choices[0].message.content)['commit_messages']
 
+@click.command()
 def main():
-    try:
-        while True:
-            diff = get_git_diff()
+    while True:
+        diff = get_git_diff()
 
-            if not diff:
-                print(colored("No changes to commit. Execute 'git add' to stage changes.", "red"))
-                sys.exit(1)
-                
-            suggestion = input("Add an optional suggestion for improvement (or press Enter to skip): ")
+        if not diff:
+            console.print("[red]No changes to commit. Execute 'git add' to stage changes.[/red]")
+            raise SystemExit(1)
 
+        suggestion = questionary.text("Add an optional suggestion for improvement (or press Enter to skip):").ask()
+
+        with console.status("[bold green]Generating commit messages...[/bold green]", spinner="dots"):
             commit_messages = generate_commit_messages(diff, suggestion)
 
-            print(colored("Suggested commit messages:", "cyan"))
+        options = [
+            f"{message['type']}({message['scope']}): {message['description']}"
+            for message in commit_messages
+        ]
 
-            for i, message in enumerate(commit_messages, start=0):
-                print(colored(f"{i+1}: {message['type']}({message['scope']}): {message['description']}", "cyan"))
+        selected_option = questionary.select(
+            "Choose the commit message:",
+            choices=options
+        ).ask()
 
-            selected_option = input("Choose one of the options above (or press 'r' to refresh, 'q' to quit): \n")
-            if selected_option.lower() == 'q':
-                print(colored("Quitting...", "yellow"))
-                break
-            elif selected_option.lower() == 'r':
-                print(colored("Refreshing commit messages...", "cyan"))
-                continue
-
-            selected_option = int(selected_option)
-            if selected_option < 1 or selected_option > len(commit_messages):
-                print(colored("Invalid option", "red"))
-                continue
-
-            commit_message = f"{commit_messages[selected_option-1]['type']}({commit_messages[selected_option-1]['scope']}): {commit_messages[selected_option-1]['description']}"
-            final_commit_message = prompt(f"Edit the commit message if needed: ", default=commit_message)
-
-            print(colored(f'Final commit message: "{final_commit_message}"', "yellow"))
-            os.system(f'git commit -m "{final_commit_message}"')
+        if selected_option is None:
+            console.print("[yellow]Quitting...[/yellow]")
             break
 
-    except KeyboardInterrupt:
-        print(colored("\nOperation cancelled by user.", "red"))
-        sys.exit(1)
-    except ValueError:
-        print(colored("Please enter a valid number.", "red"))
-        main()
+        final_commit_message = questionary.text("Edit the commit message if needed:", default=selected_option).ask()
+
+        console.print(f'[yellow]Final commit message: "{final_commit_message}"[/yellow]')
+        os.system(f'git commit -m "{final_commit_message}"')
+        break
 
 if __name__ == "__main__":
     main()
-
