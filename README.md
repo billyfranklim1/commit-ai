@@ -2,6 +2,10 @@
 
 Commit-AI é uma ferramenta de linha de comando (CLI) desenvolvida para auxiliar desenvolvedores a gerar mensagens de commit para Git utilizando a inteligência artificial da OpenAI. É uma ferramenta versátil, aplicável a qualquer projeto, independentemente da linguagem de programação.
 
+## Demonstração
+
+![Demonstração do Commit-AI](video.gif)
+
 ## Instalação
 
 ### Pré-requisitos
@@ -11,57 +15,57 @@ Commit-AI é uma ferramenta de linha de comando (CLI) desenvolvida para auxiliar
 
 ### Passos para Instalação
 
-1. Clone o repositório do Commit-AI para sua máquina local:
+1.  Clone o repositório do Commit-AI para sua máquina local:
 
-   ```bash
-   git clone https://github.com/billyfranklim1/commit-ai.git
-   ```
+    ```bash
+    git clone https://github.com/billyfranklim1/commit-ai.git
+    ```
 
-2. Navegue até o diretório do projeto clonado:
+2.  Navegue até o diretório do projeto clonado:
 
-   ```bash
-   cd commit-ai
-   ```
+    ```bash
+    cd commit-ai
+    ```
 
-3. (Opcional) Crie e ative um ambiente virtual Python para evitar conflitos de dependências:
+3.  (Opcional) Crie e ative um ambiente virtual Python para evitar conflitos de dependências:
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # No Windows use `venv\Scripts\activate`
-   ```
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # No Windows use `venv\Scripts\activate`
+    ```
 
-4. Instale as dependências necessárias:
+4.  Instale as dependências necessárias:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-5. Torne o script `commit-ai` executável:
+5.  Torne o script `commit-ai` executável:
 
-   ```bash
-   chmod +x commit-ai
-   ```
+    ```bash
+    chmod +x commit-ai
+    ```
 
-6. Adicione o diretório do script ao seu PATH para permitir a execução do comando `commit-ai` de qualquer lugar. Adicione a seguinte linha ao seu arquivo de configuração de shell (e.g., `.bashrc`, `.zshrc`):
+6.  Adicione o diretório do script ao seu PATH para permitir a execução do comando `commit-ai` de qualquer lugar. Adicione a seguinte linha ao seu arquivo de configuração de shell (e.g., `.bashrc`, `.zshrc`):
 
-   ```bash
-   vim ~/.zshrc  # Ou ~/.bashrc, ~/.bash_profile, etc.
-   ```
+    ```bash
+    vim ~/.zshrc  # Ou ~/.bashrc, ~/.bash_profile, etc.
+    ```
 
-   Adicione a seguinte linha:
+    Adicione a seguinte linha:
 
-   ```bash
-   export PATH="$PATH:/caminho/para/commit-ai"
-   export OPENAI_API_KEY='sua_chave_de_api_aqui'
-   ```
+    ```bash
+    export PATH="$PATH:/caminho/para/commit-ai"
+    export OPENAI_API_KEY='sua_chave_de_api_aqui'
+    ```
 
-   Recarregue o arquivo de configuração do shell:
+    Recarregue o arquivo de configuração do shell:
 
-   ```bash
-   source ~/.zshrc  # Ou ~/.bashrc, ~/.bash_profile, etc.
-   ```
+    ```bash
+    source ~/.zshrc  # Ou ~/.bashrc, ~/.bash_profile, etc.
+    ```
 
-   Substitua `/caminho/para/commit-ai` pelo caminho absoluto do diretório onde o script está localizado e `sua_chave_de_api_aqui` pela sua chave de API do OpenAI.
+    Substitua `/caminho/para/commit-ai` pelo caminho absoluto do diretório onde o script está localizado e `sua_chave_de_api_aqui` pela sua chave de API do OpenAI.
 
 ## Uso
 
